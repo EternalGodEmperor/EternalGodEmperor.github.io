@@ -2,7 +2,7 @@
 <html>
 	<head>
 		
-<title>Code Cow 的学习记录-CodeCow</title>
+<title>文章分类-CodeCow</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -49,13 +49,13 @@
 				<ul>
 					
 						
-							<li class="select">
-								<a href="/">
-									主页
-								</a>
-								<span class="dot"></span>
-							</li>
-							
+								<li>
+									<a href="/">
+										主页
+									</a>
+									<span class="dot"></span>
+								</li>
+								
 									
 						
 								<li>
@@ -67,13 +67,13 @@
 								
 									
 						
-								<li>
-									<a href="/categories">
-										分类
-									</a>
-									<span class="dot"></span>
-								</li>
-								
+							<li class="select">
+								<a href="/categories">
+									分类
+								</a>
+								<span class="dot"></span>
+							</li>
+							
 									
 						
 								<li>
@@ -275,54 +275,35 @@
 
 </script>
 
-<div class="home">
-	<div class="header-body-background">
+
+<div class="categories">
+    <div class="header-body-background">
     <div class="header-body-background-content">
         <span>
-            <img src="/image/logo.png" alt="Quiet">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imgblogmyCategory.svg" alt="Quiet">
         </span>
 
-        <h2>今天写代码了吗？</h2>
+        <h2>文章分类</h2>
     </div>
 </div>
-	<div class="main">
-		
-			<div class="post-card" id="content">
-				
-					<div class="post-card-display">
-						<a href="/2022/10/22/Spring%20Security%20%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83%E7%9A%84%E8%BF%87%E7%A8%8B%E5%8F%8A%E5%AE%9E%E7%8E%B0/">
-							<h2 class="post-card-title">
-								Spring Security 认证和授权的过程及实现
-							</h2>
-							
-								<img src="https://img2.baidu.com/it/u=2738791524,2249817939&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=640&amp;h=325" alt="Quiet">
-							
-						</a>
-						<div class="post-card-meat">
-							<div class="meat-info">
-								<div class="info-auth">
-										<a href="categories/Spring全家桶/">
-											Spring全家桶
-										</a>
-								</div>
-								<div class="info-data">
-									2022-10-22
-								</div>
+    <div class="categories-content" id="content">
+        <div class="categories-content-data">
+				<div class="categories-class">
+					
+						<a class="categories-class-card" href="/categories/Spring%E5%85%A8%E5%AE%B6%E6%A1%B6/"
+							style="background-image: url('https://api.ixiaowai.cn/gqapi/gqapi.php');"
+						>
+							<span class="categories-class-card-title">Spring全家桶</span>
+							<div class="categories-class-card-number">
+								<span>
+									<span class="categories-length">1</span> 篇
+								</span>
 							</div>
-							<div class="meat-type"></div>
-						</div>
-					</div>
-				
-			</div>
-		
-		
-	
-	</div>
-	<div class="change-page">
-		
-				
-	</div>
-	
+						</a>
+					
+				</div>
+        </div>
+    </div>
 </div>
 		
 <div class="footer">
@@ -427,7 +408,7 @@
             distractionFreeMode:false
         })
         
-        if(Boolean('')){
+        if(Boolean('true')){
             gitalk.render('gitalk-container')
         }
     </script>

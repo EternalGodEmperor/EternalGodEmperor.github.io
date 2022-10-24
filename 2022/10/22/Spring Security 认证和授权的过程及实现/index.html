@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+<title>Spring Security 认证和授权的过程及实现-CodeCow</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+<link rel="stylesheet" href="/css/index.css">
+
+
+<meta name="keywords" content="java">
+<meta name="description" content="描述">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/index.js"></script>
+
+
+<script src="/js/fancybox.umd.js"></script>
+
+
+<script src="/js/fancybox-images.js"></script>
+
+
+<script src="/js/gitalk.min.js"></script>
+
+
+<script src="/js/hljs.min.js"></script>
+ 
+<script>hljs.highlightAll();</script>
+
+	<meta name="generator" content="Hexo 6.3.0"></head>
+
+	<body>
+		
+	<div class="header">
+		<div class="header-top" id="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										主页
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										归档
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										分类
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										标签
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										链接
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										简介
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>code cow</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">主页</a>
+        </li>
+        
+        <li>
+            <a href="/archives">归档</a>
+        </li>
+        
+        <li>
+            <a href="/categories">分类</a>
+        </li>
+        
+        <li>
+            <a href="/tags">标签</a>
+        </li>
+        
+        <li>
+            <a href="/links">链接</a>
+        </li>
+        
+        <li>
+            <a href="/about">简介</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/79E/hexo-theme-quiet">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'>
+</div>
+<style>
+    .shelter{
+        background-color: #333;
+        opacity:0.5;
+        cursor: pointer;
+        display: none; 
+        position: fixed;
+        left: 0;
+        top: 0; 
+        right: 0;
+        bottom: 0;
+        z-index: 1998;
+    }
+    .sidebar {
+        width: 66%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        background: #fff;
+        z-index: 1999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815);
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $( function () {
+	$( '.h-right-close>svg' )
+		.click( function () {
+			$( '.sidebar' )
+				.animate( {
+					right: "0"
+				}, 500 );
+			$( '.shelter' )
+				.fadeIn( "slow" )
+		} );
+	$( '.shelter' )
+		.click( function ( e ) {
+			$( '.sidebar' )
+				.animate( {
+					right: "-100%"
+				}, 500 );
+			$( '.shelter' )
+				.fadeOut( "slow" )
+		} )
+} )
+
+</script>
+
+<div class="post">
+    <div class="post-header-background post-header-img"
+    style="background: url('https://api.ixiaowai.cn/gqapi/gqapi.php')" 
+>
+    <div class="post-header-background-content">
+        <ul class="post-header-tag">
+            
+        </ul>
+        
+        <h1>Spring Security 认证和授权的过程及实现</h1>
+        <div class="post-header-info">
+            <div class="post-header-info-author">
+                
+                    <svg t="1604839279282" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="2901" width="20" height="20">
+                        <path
+                            d="M513 956.3c-247.7 0-448-200.3-448-448S265.3 66.2 513 66.2s448 200.3 448 448-200.3 442.1-448 442.1z m0-830.9c-212.2 0-388.8 170.7-388.8 388.8C124.2 726.3 294.9 903 513 903c212.2 0 388.8-170.7 388.8-388.8S725.2 125.4 513 125.4z m0 430.2c-94.2 0-170.7-76.5-170.7-170.7S418.8 207.8 513 207.8s170.7 76.5 170.7 170.7S607.2 555.6 513 555.6z m0-289.1c-64.6 0-112 52.8-112 112s47.4 117.9 112 117.9 112-52.8 112-112-47.4-117.9-112-117.9z m0 689.8c-135.7 0-259-58.7-341.9-158.9l-11.8-17.8 11.8-17.8c76.5-117.9 206.2-188.5 347.8-188.5 135.7 0 265 64.6 341.9 182.6l11.8 17.8-11.8 17.8C778 897.1 648.7 956.3 513 956.3zM230.3 773.2C300.9 849.7 406.9 897 513 897c112 0 218.1-47.4 288.6-129.8-70.5-88.2-170.7-135.6-282.7-135.6s-218.1 53.3-288.6 141.6z"
+                            p-id="2902" fill="#ffffff"></path>
+                    </svg>
+                    
+                <span class="post-header-info-author-text"> <a href="../../about">Code Cow</a></span>
+                <div class="post-header-info-author-categories">
+                    
+                         <a href="../../categories/Spring全家桶/" target="_blank" >Spring全家桶</a>
+                    
+                </div>
+                <p>2022-10-22 09:59:34</p>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="post-content" id="content">
+  
+  <div id="article" class="post-content-info">
+    
+
+    <h1 id="Spring-Security-认证和授权的过程及实现"><a href="#Spring-Security-认证和授权的过程及实现" class="headerlink" title="Spring Security 认证和授权的过程及实现"></a>Spring Security 认证和授权的过程及实现</h1><h2 id="Spring-Security概述"><a href="#Spring-Security概述" class="headerlink" title="Spring Security概述"></a>Spring Security概述</h2><p>​	Spring Security是Spring家族中的一个安全管理框架。</p>
+<p>​	一般Web应用都需要进行认证和授权</p>
+<p>​	<strong>认证：</strong>验证当前访问系统的用户是否是本系统的用户，并且需要确认是哪个用户</p>
+<p>​	<strong>授权：</strong>经过认证后判断当前用户的身份，并判断该用户是否有进行某个操作的权限</p>
+<h2 id="1-快速入门"><a href="#1-快速入门" class="headerlink" title="1.快速入门"></a>1.快速入门</h2><h3 id="1-1-创建一个基础的SpringBoot的Web项目"><a href="#1-1-创建一个基础的SpringBoot的Web项目" class="headerlink" title="1.1 创建一个基础的SpringBoot的Web项目"></a>1.1 创建一个基础的SpringBoot的Web项目</h3><h3 id="1-2-导入maven依赖坐标"><a href="#1-2-导入maven依赖坐标" class="headerlink" title="1.2 导入maven依赖坐标"></a>1.2 导入maven依赖坐标</h3><pre><code class="markdown">       &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p>引入依赖后访问接口会自动跳出登入页面，默认用户名是user，默认密码会输出到控制台</p>
+<p>必须登陆后才可以对接口进行访问</p>
+<h2 id="2-认证"><a href="#2-认证" class="headerlink" title="2.认证"></a>2.认证</h2><h3 id="2-1登陆验证流程"><a href="#2-1登陆验证流程" class="headerlink" title="2.1登陆验证流程"></a>2.1登陆验证流程</h3><p><img src="https://img-blog.csdnimg.cn/2e1216c638db41c7b827598695ef8f15.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5L2V5a2m6ZW_,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<h3 id="2-1-1-Spring-Security完整流程"><a href="#2-1-1-Spring-Security完整流程" class="headerlink" title="2.1.1 Spring  Security完整流程"></a>2.1.1 Spring  Security完整流程</h3><p><img src="https://img-blog.csdnimg.cn/124867e0f3e84467ac9ead2419aa450c.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5L2V5a2m6ZW_,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<p>图片展示了核心过滤器，非全部过滤器</p>
+<p>**UsernamePasswordAuthenticationFilter:**处理携带用户名和密码的登陆请求</p>
+<p>**ExceptionTranslationFilter:**处理过滤器中抛出的任何AccessDeniedException和AuthenticationException</p>
+<p>**FilterSecurityInterceptor:**负责权限校验的过滤器</p>
+<h3 id="2-1-2-Spring-Security-中的完整过滤器"><a href="#2-1-2-Spring-Security-中的完整过滤器" class="headerlink" title="2.1.2 Spring Security 中的完整过滤器"></a>2.1.2 Spring Security 中的完整过滤器</h3><p><img src="https://img-blog.csdnimg.cn/684b4604a4404264bff0dcdae656288b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5L2V5a2m6ZW_,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<h3 id="2-1-3-认证流程详解"><a href="#2-1-3-认证流程详解" class="headerlink" title="2.1.3 认证流程详解"></a>2.1.3 认证流程详解</h3><p><img src="https://img-blog.csdnimg.cn/fd1374d3fe6d40d69f1c6500239308b2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5L2V5a2m6ZW_,size_20,color_FFFFFF,t_70,g_se,x_16"></p>
+<p><strong>Authentication：</strong>它的实现类，表示当前访问系统的用户，封装了用户的信息</p>
+<p><strong>AuthenticationManager：</strong>定义了认证Authentication的方法</p>
+<p><strong>UserDetailsService：</strong>加载用户特定数据的核心接口，定义了一个根据用户名查询用户信息的方法</p>
+<p><strong>UserDetails：</strong>提供核心用户信息。通过UserDetailsService根据用户名获取需要处理的用户信息封装成UserDetials对象返回。然后将结果信息封装在Authentication对象中。</p>
+<h3 id="2-2-登陆认证完整思路"><a href="#2-2-登陆认证完整思路" class="headerlink" title="2.2 登陆认证完整思路"></a>2.2 登陆认证完整思路</h3><p>1.自定义JwtToken拦截器，拦截所有请求</p>
+<p>​	1.1获取请求中的token，若token为null，则为第一次登陆，进行登陆逻辑</p>
+<p>​									 	  token不为null，不是第一次登陆，是其他资源接口的请求,将获取到的token解析并存在                   </p>
+<p>​											securityContextHodler中</p>
+<p>2.调用Authentication中的认证方法，进行认证</p>
+<p>​	2.1调用Authentication的子接口UsernamePasswordAutenticaiton对用户名，密码进行验证</p>
+<p>​		2.1.1验证流程：自定义类实现UserDetailsService，重写loadUserByUsername方法，将返回值封装到Authentication中（AuthenticationManager的authentication方法）</p>
+<p>​	2.2验证用户存在，生成token并返回给前端，不存在，将抛出异常，用户信息错误</p>
+<h3 id="2-3-登陆认证代码实现"><a href="#2-3-登陆认证代码实现" class="headerlink" title="2.3 登陆认证代码实现"></a>2.3 登陆认证代码实现</h3><p>一.JwtAuthnticationTokenFilter,实现doFilterinternal方法</p>
+<pre><code class="java">@Component
+public class JwtAuthnticationTokenFilter extends OncePerRequestFilter&#123;
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException &#123;
+        //获取token
+        String token = request.getHeader(&quot;token&quot;);
+        if(!StringUtils.hasText(token))&#123;
+            //token不存在，是第一次登陆
+            filterChain.doFilter(request,response);
+            return;
+        &#125;
+        //token存在，对token解析
+        String userId = null ;
+        try &#123;
+            Claims claims = JwtUtil.parseJWT(token);
+            userId = claims.getSubject();
+        &#125; catch (Exception e) &#123;
+            throw new RuntimeException(&quot;token 非法&quot;);
+        &#125;
+        //通过key从redis中获取用户信息
+        LoginUser loginUser = redisCache.getCacheObject(&quot;login:&quot; + userId);
+        if(Objects.isNull(loginUser))&#123;
+            throw new RuntimeException(&quot;用户未登录&quot;);
+        &#125;
+        //将用户权限信息存入SecurityContextHolder
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        filterChain.doFilter(request,response);
+    &#125;
+&#125;
+</code></pre>
+<p>二.接收登陆请求,在service写登陆逻辑</p>
+<pre><code class="java">@RestController
+@RequestMapping(&quot;/user&quot;)
+public class LoginController &#123;
+
+    @Autowired
+    private LoginService loginService;
+
+    @PostMapping(&quot;/login&quot;)
+    public ResponseResult login(@RequestBody User user)&#123;
+        log.error(user.toString());
+        return loginService.login(user);
+    &#125;
+</code></pre>
+<pre><code class="java">/*
+1.对登陆输入的用户信息进行认证
+    1.1 用户信息查询为null 抛出异常
+    1.2 用户信息存在，进行存储
+2.用户信息存在，生成token，返回给前端
+3.将用户信息存入redis
+*/
+@Service
+public class LoginService &#123;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    public ResponseResult login(User user) &#123;
+        //对用户信息进行认证
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        if(Objects.isNull(authenticate))&#123;
+            //用户信息不存在
+            throw new RuntimeException(&quot;用户不存在&quot;);
+        &#125;
+        //用户存在,生成token
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        String userId = loginUser.getUser().getId().toString();
+        String token = JwtUtil.createJWT(userId);
+
+        //将用户对象存入redis
+        redisCache.setCacheObject(&quot;login:&quot;+userId,loginUser);
+        //将token返回给前端
+        HashMap&lt;String,String&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;token&quot;,token);
+        return new ResponseResult(200,&quot;登陆成功&quot;,map);
+    &#125;
+</code></pre>
+<p>ps：对用户信息进行认证方法</p>
+<pre><code class="java">/*
+用户进行认证方法，调用
+Authentication authentication = new UsernamePasswordAuthenticationToken（username，password）
+认证过程:调用UserDetailsService实现类进行数据库对用户的查询，返回给authntication对象
+*/
+@Service
+public class UserServiceImpl implements UserDetailsService &#123;
+    @Autowired
+    private UserMapper userMapper;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException &#123;
+        log.error(username);
+        //验证用户信息
+        LambdaQueryWrapper&lt;User&gt; qw = new LambdaQueryWrapper&lt;&gt;();
+        qw.eq(User::getUserName,username);
+        User user = userMapper.selectOne(qw);
+
+        if(Objects.isNull(user))&#123;
+            throw new RuntimeException(&quot;用户不存在&quot;);
+        &#125;
+
+        return new LoginUser(user);
+    &#125;
+/*
+将查询到的信息封装在authntication对象中
+AuthenticationManager.authentication（authentication）
+*/
+</code></pre>
+<p>ps:SpringSecurity配置</p>
+<pre><code class="java">@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter &#123;
+    
+    //对密码加密方式的重写
+    @Bean
+    public PasswordEncoder passwordEncoder()&#123;
+        return new BCryptPasswordEncoder();
+    &#125;
+
+    @Autowired
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    
+    //指定请求可以不登陆就可以直接访问，例如：登陆请求
+    @Override
+    protected void configure(HttpSecurity http) throws Exception &#123;
+        http
+                //关闭csrf
+                .csrf().disable()
+                //不通过Session获取SecurityContext
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                // 对于登录接口 允许匿名访问
+                .antMatchers(&quot;/user/login&quot;).anonymous()
+                // 除上面外的所有请求全部需要鉴权认证
+                .anyRequest().authenticated();
+
+        //把token校验过滤器添加到过滤器链中
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+    &#125;
+    //认证用户信息所需的Bean
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception &#123;
+        return super.authenticationManagerBean();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="2-4-退出登陆思路"><a href="#2-4-退出登陆思路" class="headerlink" title="2.4 退出登陆思路"></a>2.4 退出登陆思路</h3><p>1.定义退出登陆接口</p>
+<p>2.获取SecurityContextHodler中的信息</p>
+<p>3.删除相对应的redis存放的数据</p>
+<h3 id="2-5-退出登陆代码实现"><a href="#2-5-退出登陆代码实现" class="headerlink" title="2.5 退出登陆代码实现"></a>2.5 退出登陆代码实现</h3><pre><code class="java">//Controller 定义logout（）方法
+//请求路径 /user/logout
+
+@Override
+    public ResponseResult logout() &#123;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long userid = loginUser.getUser().getId();
+        redisCache.deleteObject(&quot;login:&quot;+userid);
+        return new ResponseResult(200,&quot;退出成功&quot;);
+    &#125;
+</code></pre>
+<h2 id="3-授权"><a href="#3-授权" class="headerlink" title="3. 授权"></a>3. 授权</h2>
+  </div>
+  <div id=""></div>
+</div>
+
+<script>
+  
+Fancybox.bind('[data-fancybox="fancybox-gallery-img"]', {
+  dragToClose: true,
+  Toolbar: true,
+  closeButton: "top",
+  Image: {
+    zoom: true,
+  },
+  on: {
+    initCarousel: (fancybox) => {
+      const slide = fancybox.Carousel.slides[fancybox.Carousel.page];
+      fancybox.$container.style.setProperty(
+        "--bg-image",
+        `url("${slide.$thumb.src}")`
+      );
+    },
+    "Carousel.change": (fancybox, carousel, to, from) => {
+      const slide = carousel.slides[to];
+      fancybox.$container.style.setProperty(
+        "--bg-image",
+        `url("${slide.$thumb.src}")`
+      );
+    },
+  },
+});
+</script>
+
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 9999;
+        /* width: 600px !important; */
+        min-width: 0%;
+        max-width: 90%;
+        max-height: 80%;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            max-width: 88%
+        }
+    }
+</style>
+
+    <div class="post-paging">
+    
+
+    
+</div>
+</div>
+		
+<div class="footer">
+	<div class="Copyright">
+		©2022 By code cow. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/79e/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/79E/hexo-theme-quiet">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            transition: border .5s;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $( '#js-go_top' )
+	.gotoTop( {
+		offset: 500,
+		speed: 300,
+		animationShow: {
+			'transform': 'translate(0,0)',
+			'transition': 'transform .5s ease-in-out'
+		},
+		animationHide: {
+			'transform': 'translate(100px,0)',
+			'transition': 'transform .5s ease-in-out'
+		}
+	} );
+</script>
+
+
+    <!-- Gitalk -->
+    <script>
+        const data = '{"clientID":"02b3c","clientSecret":"adfc7b4","repo":"gimment","owner":"duneng","admin":"duneng"}'
+        const gitalk = new Gitalk({
+            ...JSON.parse( data),
+            id:location.pathname,
+            distractionFreeMode:false
+        })
+        
+        if(Boolean('false')){
+            gitalk.render('gitalk-container')
+        }
+    </script>
+
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/79e/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+</html>
+
