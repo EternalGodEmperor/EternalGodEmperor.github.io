@@ -2,7 +2,7 @@
 <html>
 	<head>
 		
-<title>minio的简单使用-CodeCow</title>
+<title>Power Designer-CodeCow</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,7 +12,7 @@
 
 
 
-<meta name="keywords" content="数据存储,minio,">
+<meta name="keywords" content="工具使用,">
 <meta name="description" content="">
 
 
@@ -284,14 +284,12 @@
         <ul class="post-header-tag">
             
             
-            <li><a href="/tags/数据存储">数据存储</a></li>
-            
-            <li><a href="/tags/minio">minio</a></li>
+            <li><a href="/tags/工具使用">工具使用</a></li>
             
             
         </ul>
         
-        <h1>minio的简单使用</h1>
+        <h1>Power Designer</h1>
         <div class="post-header-info">
             <div class="post-header-info-author">
                 
@@ -305,10 +303,10 @@
                 <span class="post-header-info-author-text"> <a href="../../about">code cow</a></span>
                 <div class="post-header-info-author-categories">
                     
-                         <a href="../../categories/第三方工具/" target="_blank" >第三方工具</a>
+                         <a href="../../categories/工具使用/" target="_blank" >工具使用</a>
                     
                 </div>
-                <p>2022-10-24 15:21:26</p>
+                <p>2022-10-26 09:53:57</p>
             </div>
         </div>
     </div>
@@ -318,65 +316,39 @@
   <div id="article" class="post-content-info">
     
 
-    <h1 id="minio的简单实用——上传和下载"><a href="#minio的简单实用——上传和下载" class="headerlink" title="minio的简单实用——上传和下载"></a>minio的简单实用——上传和下载</h1><h2 id="1-minio-概述"><a href="#1-minio-概述" class="headerlink" title="1.minio 概述"></a>1.minio 概述</h2><p>高性能的存储工具</p>
-<h2 id="2-minio下载和启动"><a href="#2-minio下载和启动" class="headerlink" title="2.minio下载和启动"></a>2.minio下载和启动</h2><h3 id="2-1下载"><a href="#2-1下载" class="headerlink" title="2.1下载"></a>2.1下载</h3><p>MinIO中文官网：<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://docs.minio.org.cn/docs/master/distributed-minio-quickstart-guide">http://docs.minio.org.cn/docs/master/distributed-minio-quickstart-guide</a><br>官网：<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://docs.min.io/docs/minio-quickstart-guide.html">https://docs.min.io/docs/minio-quickstart-guide.html</a><br>MinIO下载地址：<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://docs.minio.org.cn/docs/master/minio-client-quickstart-guide">http://docs.minio.org.cn/docs/master/minio-client-quickstart-guide</a></p>
-<h3 id="2-2-启动"><a href="#2-2-启动" class="headerlink" title="2.2 启动"></a>2.2 启动</h3><p>创建data目录</p>
-<p>cmd控制台输入命令: minio server .&#x2F;data</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/ea4bdb1d9412a31c.png"></p>
-<p>启动成功后，访问路径为 <a target="_blank" rel="noopener" href="http://localhost:9000/">http://localhost:9000</a></p>
-<p>提供的账号: minioadmin</p>
-<p>​			密码:minioadmin</p>
-<h2 id="3-Minio-Client的使用"><a href="#3-Minio-Client的使用" class="headerlink" title="3. Minio Client的使用"></a>3. Minio Client的使用</h2><p>MinIo是由bucket（桶）组成的，类似于文件夹</p>
-<h3 id="3-1创建桶"><a href="#3-1创建桶" class="headerlink" title="3.1创建桶"></a>3.1创建桶</h3><p>create bucket</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/4987c1695c536b21.png"></p>
-<h3 id="3-2-上传文件"><a href="#3-2-上传文件" class="headerlink" title="3.2 上传文件"></a>3.2 上传文件</h3><p>upload</p>
-<p>通过share可以复制文件链接，直接在浏览器中查看</p>
-<p>但是有一个问题，生成一个url的时候有一个有效期	</p>
-<p>也就是说我们生成的分享的url的有效期只有7天，过了这7天以后再想通过这个url来进行访问就会有问题</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/a0971540569faa8f.png"></p>
-<p>如果现在我们要直接访问我们的MinIO里的文件要如何访问</p>
-<p>我们应该直接访问 Minio的ip+端口&#x2F;桶名称&#x2F;文件名</p>
-<p><a target="_blank" rel="noopener" href="http://localhost:9000/huike-crm/java.png">http://localhost:9000/huike-crm/java.png</a></p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/f3b8bee03ab33756.png">)</p>
-<p>没有访问的权限</p>
-<p>修改地方：bucket–&gt;Manage–&gt;Access Rules–&gt;add Access rule</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/f5460d6b5db1bdfc.png"></p>
-<p>添加读取readOnly对应的权限是*即拥有所有权限</p>
-<p>再次浏览器访问，就可以直接访问了</p>
-<h2 id="4-Java代码实现"><a href="#4-Java代码实现" class="headerlink" title="4.Java代码实现"></a>4.Java代码实现</h2><h3 id="4-1上传"><a href="#4-1上传" class="headerlink" title="4.1上传"></a>4.1上传</h3><pre><code class="java"> @Test
-    void contextLoads() throws IOException, NoSuchAlgorithmException, InvalidKeyException &#123;
-        try &#123;
-            // 创建名叫test的桶，用户名和密码均为minioadmin
-            MinioClient minioClient =
-                    MinioClient.builder()
-                            .endpoint(&quot;http://localhost:9000/&quot;)
-                            .credentials(&quot;minioadmin&quot;, &quot;minioadmin&quot;)
-                            .build();
-
-            // 如果名叫test的桶不存在就创建
-            boolean found =
-                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(&quot;test&quot;).build());
-            if (!found) &#123;
-                // 不存在，创建叫test的桶
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(&quot;test&quot;).build());
-            &#125; else &#123;
-                System.out.println(&quot;Bucket &#39;test&#39; already exists.&quot;);
-            &#125;
-
-            //上传
-            minioClient.uploadObject(
-                    UploadObjectArgs.builder()
-                            .bucket(&quot;test&quot;)
-                            .object(&quot;day01-初出茅庐.pptx&quot;)
-                            .filename(&quot;E:\\study\\java学习\\项目\\CRM\\day01-初出茅庐\\day01-初出茅庐.pptx&quot;)
-                            .build());
-            System.out.println(&quot;上传成功&quot;);
-        &#125; catch (MinioException e) &#123;
-            System.out.println(&quot;Error occurred: &quot; + e);
-            System.out.println(&quot;HTTP trace: &quot; + e.httpTrace());
-        &#125;
-    &#125;
-</code></pre>
+    <h2 id="Power-Designer"><a href="#Power-Designer" class="headerlink" title="Power Designer"></a>Power Designer</h2><h3 id="1-Power-Designer介绍"><a href="#1-Power-Designer介绍" class="headerlink" title="1. Power Designer介绍"></a>1. Power Designer介绍</h3><p>PowerDesigner是Sybase公司的一款软件，使用它可以方便地对系统进行分析设计，他几乎包括了数据库模型设计的全过程。利用PowerDesigner可以制作数据流程图、概念数据模型、物理数据模型、面向对象模型。</p>
+<p>在项目设计阶段通常会使用PowerDesigner进行数据库设计。使用PowerDesigner可以更加直观的表现出数据库中表之间的关系，并且可以直接导出相应的建表语句。</p>
+<h3 id="2-Power-Designer使用"><a href="#2-Power-Designer使用" class="headerlink" title="2. Power Designer使用"></a>2. Power Designer使用</h3><h4 id="2-1-创建物理数据模型"><a href="#2-1-创建物理数据模型" class="headerlink" title="2.1 创建物理数据模型"></a>2.1 创建物理数据模型</h4><p>操作步骤：File-&gt;new-&gt;Physical Data Model</p>
+<p>（1）创建数据模型PDM</p>
+<p>（2）选择数据库类型</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/889152208e9b3381.png"></p>
+<p>（3）创建表和字段</p>
+<p>右击-&gt;new -&gt; table</p>
+<p>指定表名 Code代表表名 Name只代表表格名字</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/7ac8e9248e0b177e.png"></p>
+<p>创建字段</p>
+<p>设置某个字段属性，在字段上右键-&gt;Properties</p>
+<p>添加外键约束</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/317723ea07e8add8.png"></p>
+<h4 id="2-2-从PDM导出SQL脚本"><a href="#2-2-从PDM导出SQL脚本" class="headerlink" title="2.2 从PDM导出SQL脚本"></a>2.2 从PDM导出SQL脚本</h4><p>可以通过PowerDesigner设计的PDM模型导出为SQL脚本，如下：</p>
+<p>Database-&gt;Generate Database</p>
+<h4 id="2-3-逆向工程"><a href="#2-3-逆向工程" class="headerlink" title="2.3 逆向工程"></a>2.3 逆向工程</h4><p>上面我们是首先创建PDM模型，然后通过PowerDesigner提供的功能导出SQL脚本。实际上这个过程也可以反过来，也就是我们可以通过SQL脚本逆向生成PDM模型，这称为逆向工程，操作如下：</p>
+<p>File -&gt; Reverse Rngineer -&gt; Database</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/8a93b593be691019.png"></p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/02f2918121cc981e.png"></p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/4137bbadc96059d4.png"></p>
+<h4 id="2-4-生成数据库报表文件"><a href="#2-4-生成数据库报表文件" class="headerlink" title="2.4 生成数据库报表文件"></a>2.4 生成数据库报表文件</h4><p>通过PowerDesigner提供的功能，可以将PDM模型生成报表文件，具体操作如下：</p>
+<p>（1）打开报表向导窗口</p>
+<p>Report -&gt; Report Wizard</p>
+<p>（2）指定报表名称和语言</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/5300f03128b8b5e9.png"></p>
+<p>（3）选择报表格式和样式</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/9db0b20bc33eaa1d.png"></p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/7eaff630f3e6f4ee.png"></p>
+<p>（4）选择对象类型</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/e46ff6275d635532.png"></p>
+<p>（5）执行生成操作</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/26/80fc291e0a883fcf.png"></p>
 
   </div>
   <div id="gitalk-container"></div>
@@ -437,19 +409,12 @@ Fancybox.bind('[data-fancybox="fancybox-gallery-img"]', {
 
     <div class="post-paging">
     
-    <a href="/2022/10/26/Designer/">
-        <div class="post-paging-last">
-            <span>上一篇</span>
-            <p>Power Designer</p>
-        </div>
-    </a>
-    
 
     
-    <a href="/2022/10/22/Spring%20Security%20%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83%E7%9A%84%E8%BF%87%E7%A8%8B%E5%8F%8A%E5%AE%9E%E7%8E%B0/">
+    <a href="/2022/10/24/minio%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">
         <div class="post-paging-next">
             <span>下一篇</span>
-            <p>Spring Security 认证和授权的过程及实现</p>
+            <p>minio的简单使用</p>
         </div>
     </a>
     
